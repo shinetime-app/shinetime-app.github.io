@@ -8,7 +8,7 @@ export default function Home() {
       <Toaster />
 
       <section className="w-screen h-dvh grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="md:h-full h-80 bg-[#FCD0A1] relative overflow-hidden">
+        <div className="md:h-full h-80 bg-[#1A202C] relative overflow-hidden">
           <Image
             src="/mobile-app.png"
             alt="Mobile App Screenshots"
@@ -19,7 +19,7 @@ export default function Home() {
 
         <main className="flex flex-col gap-8 mt-8 justify-center px-6 pb-10">
           <h1 className="font-semibold tracking-tight text-zinc-900 text-3xl leading-tight md:text-4xl max-w-lg">
-            Join the conversation: Secure your spot on our Chat App!
+            Secure your spot on ShineTime!
           </h1>
           <p className="text-gray-500">
             Join the waitlist to be notified when our app is available!
