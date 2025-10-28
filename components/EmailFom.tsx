@@ -4,7 +4,8 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 
 export default function EmailForm() {
-  const [email, setEmail] = useState<string>();
+  const [email, setEmail] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -13,11 +14,24 @@ export default function EmailForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const endpoint =
+      process.env.NEXT_PUBLIC_FORMSPARK_ENDPOINT ||
+      (process.env.NEXT_PUBLIC_FORMSPARK_FORM_ID
+        ? `https://submit-form.com/${process.env.NEXT_PUBLIC_FORMSPARK_FORM_ID}`
+        : undefined);
+
+    if (!endpoint) {
+      toast.error("Form endpoint is not configured.");
+      return;
+    }
+
     try {
-      const response = await fetch("/api/submit", {
+      setIsSubmitting(true);
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify({ email }),
       });
@@ -32,6 +46,9 @@ export default function EmailForm() {
     } catch (err) {
       setEmail("");
       console.error(err);
+      toast.error("Network error. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
   return (
@@ -54,10 +71,11 @@ export default function EmailForm() {
             onChange={handleEmailChange}
           />
           <button
-            className="flex h-10 shrink-0 items-center justify-center gap-1 rounded-lg bg-[#000F2D] px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-zinc-700"
+            className="flex h-10 shrink-0 items-center justify-center gap-1 rounded-lg bg-[#000F2D] px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-zinc-700 disabled:opacity-60"
             type="submit"
+            disabled={isSubmitting}
           >
-            <span>Join the waitlist</span>
+            <span>{isSubmitting ? "Submitting..." : "Join the waitlist"}</span>
           </button>
         </div>
       </form>
